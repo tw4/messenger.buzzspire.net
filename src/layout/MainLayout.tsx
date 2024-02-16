@@ -1,8 +1,7 @@
 import { FC, ReactNode } from 'react'
-import { Badge, Flex, Layout, Menu } from 'antd'
+import { Badge, Layout, Menu } from 'antd'
 import {
   MessageOutlined,
-  UsergroupAddOutlined,
   SettingFilled,
   LogoutOutlined
 } from '@ant-design/icons'
