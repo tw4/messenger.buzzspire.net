@@ -6,8 +6,10 @@ import { useState } from 'react'
 export const Register: React.FC = () => {
   const [isError, setIsError] = useState(false)
   const [errorMessages, setErrorMessages] = useState<string>()
+  const [isLoading, setIsLoading] = useState(false)
 
   const onFinish = (values: RegisterForm): void => {
+    setIsLoading(true)
     RegisterRequest(values.UserName, values.Password, values.FullName).then((res) => {
       const regex = /^[\w-]+\.[\w-]+\.[\w-]+$/g.test(res.token)
       if (regex) {
@@ -15,6 +17,7 @@ export const Register: React.FC = () => {
         localStorage.setItem('token', res.token)
         window.location.href = '/home'
       } else {
+        setIsLoading(false)
         setErrorMessages(res.error)
         setIsError(true)
       }
@@ -62,7 +65,7 @@ export const Register: React.FC = () => {
 
         <Form.Item>
           <Flex gap="small" align="center">
-            <Button type="primary" htmlType="submit" className="login-form-button">
+            <Button loading={isLoading} type="primary" htmlType="submit" className="login-form-button">
               Register
             </Button>
             Or <a href="/">login now!</a>
