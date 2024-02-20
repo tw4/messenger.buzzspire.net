@@ -26,7 +26,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children, key = '1' }): JSX.El
         trigger={null}
         collapsible
         collapsed={true}
-        style={{ background: 'white', color: 'black' }}
+        style={{backgroundColor: '#1A1D21'}}
       >
         <Menu
           theme="light"

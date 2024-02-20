@@ -27,9 +27,10 @@ export const ChatItem: FC<ChatItemProps> = ({
         vertical={true}
         gap="small"
         style={{
+          borderRadius: '20px 20px 20px 0px',
           padding: '10px',
           maxWidth: '50%',
-          backgroundColor: message.receiver === null ? '#dfe3ee' : 'white'
+          backgroundColor: message.receiver === null ? '#434242' : '#00CC71'
         }}
       >
         <Typography.Text>{message.content}</Typography.Text>

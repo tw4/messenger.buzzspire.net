@@ -63,7 +63,7 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
 
   return (
     <Flex vertical={true} style={{ minHeight: '90vh' }}>
-      <Flex style={{ background: 'white', padding: '10px' }} gap="small">
+      <Flex style={{  padding: '10px', borderBottomStyle:'solid', borderBottomColor: 'grey', borderBottomWidth: '1px' }} gap="small">
         <Avatar size="default">{username[0]}</Avatar>
         <Typography.Title level={4}>{username}</Typography.Title>
       </Flex>

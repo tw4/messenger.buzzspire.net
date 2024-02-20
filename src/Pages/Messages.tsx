@@ -176,7 +176,7 @@ export const Messages = (): JSX.Element => {
       <Flex>
         <Flex
           vertical={true}
-          style={{ minWidth: '25vw', height: '100vh', padding: '10px', background: 'white' }}
+          style={{ minWidth: '25vw', height: '100vh', padding: '10px', backgroundColor: 'rgba(32,32,32,0.64)'}}
         >
           <Flex justify="space-between">
             <Typography.Title level={4}>Messages</Typography.Title>

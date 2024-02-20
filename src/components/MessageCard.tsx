@@ -20,7 +20,7 @@ export const MessageCard: FC<MessageCardProps> = ({
     <Card hoverable style={{ margin: '3px', width: '100%', position: 'relative' }}>
       <Flex align="center" justify="space-between">
         <Flex gap="small">
-          <Avatar style={{ background: 'skyblue' }}>{userName[0]}</Avatar>
+          <Avatar style={{ background: 'grey' }}>{userName[0]}</Avatar>
           <Flex vertical={true}>
             <Typography>{userName}</Typography>
             <Text style={{ color: 'gray' }}>
@@ -33,7 +33,7 @@ export const MessageCard: FC<MessageCardProps> = ({
           <Typography style={{ color: 'gray' }}>
             {new Date(date).toLocaleTimeString().slice(0, 5)}
           </Typography>
-          <Badge count={notificationCount} />
+          <Badge style={{backgroundColor: '#00FF8D'}} count={notificationCount} />
         </Flex>
       </Flex>
     </Card>

@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom/client'
 import './assets/base.css'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './Routers'
-import { ConfigProvider} from 'antd';
+import { ConfigProvider, theme } from 'antd';
 
 
 
@@ -14,6 +14,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 <React.StrictMode>
     <ConfigProvider
       theme={{
+        algorithm: theme.darkAlgorithm,
         token: {
           colorPrimary: '#00FF8D',
         },
