@@ -56,7 +56,6 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
   }
 
   useEffect(() => {
-    console.log(notification)
     if (notification.find((n) => n.senderUserName === username)) {
       getMessage()
     }
@@ -88,7 +87,6 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
             dataLength={visitMessages.length}
             next={fetchMoreData}
             style={{ display: 'flex', flexDirection: 'column-reverse' }} //To put endMessage and loader to the top.
-            inverse={true} //
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
             scrollableTarget="scrollableDiv"
