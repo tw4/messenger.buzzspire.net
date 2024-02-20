@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom/client'
 import './assets/base.css'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './Routers'
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider} from 'antd';
 
 
 
