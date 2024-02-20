@@ -11,6 +11,7 @@ export const Register: React.FC = () => {
     RegisterRequest(values.UserName, values.Password, values.FullName).then((res) => {
       const regex = /^[\w-]+\.[\w-]+\.[\w-]+$/g.test(res.token)
       if (regex) {
+        localStorage.setItem('username', values.UserName)
         localStorage.setItem('token', res.token)
         window.location.href = '/home'
       } else {
