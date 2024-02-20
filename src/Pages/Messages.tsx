@@ -49,7 +49,6 @@ export const Messages = (): JSX.Element => {
 
     // listen for messages
     ws.onmessage = (msg): void => {
-      console.log(msg.data)
       const data: Notification = JSON.parse(msg.data)
 
       setNotification((prev) => [...prev, data])
@@ -136,8 +135,7 @@ export const Messages = (): JSX.Element => {
     const token = localStorage.getItem('token')
     if (token) {
       SearchUserByUserName(token, value).then((res) => {
-        if (res) {
-          console.log(res)
+        if (typeof res.userName === 'string') {
           setFoundUser(res)
         }
       })
