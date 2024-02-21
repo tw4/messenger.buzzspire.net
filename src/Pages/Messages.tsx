@@ -1,5 +1,5 @@
 import { MainLayout } from '../layout/MainLayout';
-import { Flex, Button, Tooltip, Typography, message, Input, Drawer, Popover } from 'antd';
+import { Flex, Button, Tooltip, Typography, message, Input, Popover } from 'antd';
 import { MessageCard } from '../components/MessageCard';
 import { GetAllLastMessagesResponse } from '../Types/MessageType';
 import { useEffect, useState } from 'react';
