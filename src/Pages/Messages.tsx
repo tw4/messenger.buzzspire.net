@@ -14,7 +14,6 @@ export const Messages = (): JSX.Element => {
   const [lastMessagesResponse, setLastMessagesResponse] = useState<GetAllLastMessagesResponse[]>([]);
   const [toogleMessage, setToogleMessage] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<string>('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [notification, setNotification] = useState<Notification[]>([]);
   const [text, setText] = useState<string>('');
@@ -142,14 +141,9 @@ export const Messages = (): JSX.Element => {
     }
   };
 
-  const showModal = (): void => {
-    setIsModalOpen(true);
-  };
-
   const handleFoundUser = (): void => {
     if (foundUser) {
       handleToogleMessage(foundUser.userName);
-      setIsModalOpen(false);
     }
   };
 
@@ -182,7 +176,7 @@ export const Messages = (): JSX.Element => {
             <div>
               <Popover content={popoverContent} title="" trigger="click">
               <Tooltip title="Create a new message">
-                <Button onClick={showModal} shape="circle">
+                <Button shape="circle">
                   <FileAddOutlined />
                 </Button>
               </Tooltip>
