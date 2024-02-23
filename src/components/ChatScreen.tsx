@@ -1,71 +1,99 @@
-import { FC, useEffect, useState } from 'react'
-import { Avatar, Flex, Typography } from 'antd'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { ChatItem } from './ChatItem'
-import { GetMessages } from '../API/Messages'
-import { Message } from '../Types/EntitysType'
-import { Notification } from '../Types/NotificationType'
+import { FC, useEffect, useState } from 'react';
+import { Avatar, Flex, Typography, Popover} from 'antd';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { ChatItem } from './ChatItem';
+import { GetMessages } from '../API/Messages';
+import { Message, User } from '../Types/EntitysType';
+import { Notification } from '../Types/NotificationType';
+import { SearchUserByUserName } from '../API/User.tsx';
 
 interface ChatScreenProps {
-  username: string
-  notification: Notification[]
+  username: string;
+  notification: Notification[];
 }
 
 export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX.Element => {
-  const [defaultUserName, setDefaultUserName] = useState<string>('')
-  const [messages, setMessages] = useState<Message[]>([])
-  const [visitMessages, setVisitMessages] = useState<Message[]>([])
-  const [hasMore, setHasMore] = useState<boolean>(true)
+  const [defaultUserName, setDefaultUserName] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [visitMessages, setVisitMessages] = useState<Message[]>([]);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [userDetails, setUserDetails] = useState<User>();
 
   useEffect(() => {
-    const username = localStorage.getItem('username')
+    const u = localStorage.getItem('username');
+    const token = localStorage.getItem('token');
 
-    if (username) {
-      setDefaultUserName(username)
-      getMessage()
+    if (u && token) {
+      setDefaultUserName(u);
+      getMessage();
+      SearchUserByUserName(token, username).then((res) => {
+          setUserDetails(res);
+        },
+      );
     }
 
-    const chatScreen = document.querySelector('.chatScreen')
+    const chatScreen = document.querySelector('.chatScreen');
     if (chatScreen) {
-      chatScreen.scrollTop = chatScreen.scrollHeight
+      chatScreen.scrollTop = chatScreen.scrollHeight;
     }
-  }, [username])
+  }, [username]);
 
   const getMessage = (): void => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
 
     if (token) {
       GetMessages(token, username).then((res) => {
         if (res) {
-          setMessages(res)
-          setVisitMessages(res.reverse().slice(0, 10))
+          setMessages(res);
+          setVisitMessages(res.reverse().slice(0, 10));
         }
-      })
+      });
     }
-  }
+  };
 
   const fetchMoreData = (): void => {
     if (visitMessages.length >= messages.length) {
-      setHasMore(false)
+      setHasMore(false);
     } else {
       setVisitMessages((prev) => [
         ...messages.slice(visitMessages.length, visitMessages.length + 10),
-        ...prev
-      ])
+        ...prev,
+      ]);
     }
-  }
+  };
 
   useEffect(() => {
     if (notification.find((n) => n.senderUserName === username)) {
-      getMessage()
+      getMessage();
     }
-  }, [notification])
+  }, [notification]);
+
+  const popOverContent = (
+    userDetails && (
+      <Flex vertical={true} style={{height:200, width: 300, position:'relative', }}>
+        <div style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#414141', height: '50px', width:'100%', borderRadius: '5px' }}> </div>
+        <Flex style={{ width: 300, position: 'absolute', top: 25, borderTopLeftRadius: '20px', borderTopRightRadius: '20px' }}>
+          <Flex vertical={true} justify='center' align='center' gap="small" style={{width: '100%'}}>
+            <Avatar size="large" style={{backgroundColor: '#a4a4a4'}}>{username[0]}</Avatar>
+            <Typography.Title level={4}>{username}</Typography.Title>
+            <Typography.Text>{userDetails.fullName}</Typography.Text>
+            <Typography.Text>{userDetails.bio}</Typography.Text>
+          </Flex>
+        </Flex>
+      </Flex>
+      )
+  )
 
   return (
     <Flex vertical={true} style={{ minHeight: '90vh' }}>
-      <Flex style={{  padding: '10px', borderBottomStyle:'solid', borderBottomColor: 'grey', borderBottomWidth: '1px' }} gap="small">
-        <Avatar size="default">{username[0]}</Avatar>
-        <Typography.Title level={4}>{username}</Typography.Title>
+      <Flex style={{ padding: '10px', borderBottomStyle: 'solid', borderBottomColor: 'grey', borderBottomWidth: '1px' }}
+            gap="small">
+        <Popover content={popOverContent} trigger='click'>
+          <Flex style={{cursor: 'pointer'}} gap='middle'>
+            <Avatar size="default">{username[0]}</Avatar>
+            <Typography.Title level={4}>{username}</Typography.Title>
+          </Flex>
+        </Popover>
       </Flex>
       <Flex
         id="chatScreen"
@@ -79,7 +107,7 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
             height: '80vh',
             overflow: 'auto',
             display: 'flex',
-            flexDirection: 'column-reverse'
+            flexDirection: 'column-reverse',
           }}
         >
           {/*Put the scroll bar always on the bottom*/}
@@ -103,5 +131,5 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
         </div>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
