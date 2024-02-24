@@ -74,7 +74,7 @@ export const Messages = (): JSX.Element => {
 
     if (!token) return;
 
-    GetMessages(token, username).then((res) => {
+    GetMessages(token, username,1).then((res) => {
       if (res) {
         setToogleMessage(true);
         setSelectedUser(username);
