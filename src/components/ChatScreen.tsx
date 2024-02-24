@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Avatar, Flex, Typography, Popover} from 'antd';
+import { Avatar, Flex, Typography, Popover } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ChatItem } from './ChatItem';
 import { GetMessages } from '../API/Messages';
@@ -14,10 +14,10 @@ interface ChatScreenProps {
 
 export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX.Element => {
   const [defaultUserName, setDefaultUserName] = useState<string>('');
-  const [messages, setMessages] = useState<Message[]>([]);
   const [visitMessages, setVisitMessages] = useState<Message[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [userDetails, setUserDetails] = useState<User>();
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
     const u = localStorage.getItem('username');
@@ -42,54 +42,70 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
     const token = localStorage.getItem('token');
 
     if (token) {
-      GetMessages(token, username).then((res) => {
+      GetMessages(token, username, 1).then((res) => {
         if (res) {
-          setMessages(res);
-          setVisitMessages(res.reverse().slice(0, 10));
+          setVisitMessages(res);
         }
       });
     }
   };
 
   const fetchMoreData = (): void => {
-    if (visitMessages.length >= messages.length) {
-      setHasMore(false);
-    } else {
-      setVisitMessages((prev) => [
-        ...messages.slice(visitMessages.length, visitMessages.length + 10),
-        ...prev,
-      ]);
+    const token = localStorage.getItem('token');
+    console.log('fetchMoreData Page:', page);
+    if (token) {
+      GetMessages(token, username, page + 1).then((res) => {
+        if (res) {
+          setVisitMessages([...visitMessages, ...res],);
+          setPage(page + 1);
+        }
+      });
     }
   };
 
   useEffect(() => {
     if (notification.find((n) => n.senderUserName === username)) {
       getMessage();
+      setPage(1);
     }
   }, [notification]);
 
   const popOverContent = (
     userDetails && (
-      <Flex vertical={true} style={{height:200, width: 300, position:'relative', }}>
-        <div style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#414141', height: '50px', width:'100%', borderRadius: '5px' }}> </div>
-        <Flex style={{ width: 300, position: 'absolute', top: 25, borderTopLeftRadius: '20px', borderTopRightRadius: '20px' }}>
-          <Flex vertical={true} justify='center' align='center' gap="small" style={{width: '100%'}}>
-            <Avatar size="large" style={{backgroundColor: '#a4a4a4'}}>{username[0]}</Avatar>
+      <Flex vertical={true} style={{ height: 200, width: 300, position: 'relative' }}>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          backgroundColor: '#414141',
+          height: '50px',
+          width: '100%',
+          borderRadius: '5px',
+        }}></div>
+        <Flex style={{
+          width: 300,
+          position: 'absolute',
+          top: 25,
+          borderTopLeftRadius: '20px',
+          borderTopRightRadius: '20px',
+        }}>
+          <Flex vertical={true} justify="center" align="center" gap="small" style={{ width: '100%' }}>
+            <Avatar size="large" style={{ backgroundColor: '#a4a4a4' }}>{username[0]}</Avatar>
             <Typography.Title level={4}>{username}</Typography.Title>
             <Typography.Text>{userDetails.fullName}</Typography.Text>
             <Typography.Text>{userDetails.bio}</Typography.Text>
           </Flex>
         </Flex>
       </Flex>
-      )
-  )
+    )
+  );
 
   return (
     <Flex vertical={true} style={{ minHeight: '90vh' }}>
       <Flex style={{ padding: '10px', borderBottomStyle: 'solid', borderBottomColor: 'grey', borderBottomWidth: '1px' }}
             gap="small">
-        <Popover content={popOverContent} trigger='click'>
-          <Flex style={{cursor: 'pointer'}} gap='middle'>
+        <Popover content={popOverContent} trigger="click">
+          <Flex style={{ cursor: 'pointer' }} gap="middle">
             <Avatar size="default">{username[0]}</Avatar>
             <Typography.Title level={4}>{username}</Typography.Title>
           </Flex>
@@ -116,6 +132,7 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
             next={fetchMoreData}
             style={{ display: 'flex', flexDirection: 'column-reverse' }} //To put endMessage and loader to the top.
             hasMore={hasMore}
+            inverse={true}
             loader={<h4>Loading...</h4>}
             scrollableTarget="scrollableDiv"
           >
