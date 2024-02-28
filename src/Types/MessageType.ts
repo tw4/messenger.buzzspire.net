@@ -1,17 +1,10 @@
-export type Message = {
-  senderId: number
-  sender: null
-  receiverId: number
-  receiver: null
-  date: string
-  content: string
-  id: number
-}
+import { Message } from './EntitysType.ts';
 
 export type LastMessage = {
   userName: string
   userId: number
   lastMessage: Message
+  profilePicture: string
 }
 
 export type GetAllLastMessagesResponse = LastMessage

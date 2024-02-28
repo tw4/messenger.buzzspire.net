@@ -3,12 +3,12 @@ import { Flex, Button, Tooltip, Typography, message, Input, Popover } from 'antd
 import { MessageCard } from '../components/MessageCard';
 import { GetAllLastMessagesResponse } from '../Types/MessageType';
 import { useEffect, useState } from 'react';
-import { GetAllLastMessages, GetMessages, SendMessage } from '../API/Messages';
+import { GetAllLastMessages, GetMessages, SendMessage } from '../API/Messages.ts';
 import { FileAddOutlined, SendOutlined } from '@ant-design/icons';
 import { ChatScreen } from '../components/ChatScreen';
 import { Notification } from '../Types/NotificationType';
 import { User } from '../Types/EntitysType';
-import { SearchUserByUserName } from '../API/User';
+import { SearchUserByUserName } from '../API/User.ts';
 
 export const Messages = (): JSX.Element => {
   const [lastMessagesResponse, setLastMessagesResponse] = useState<GetAllLastMessagesResponse[]>([]);
@@ -25,6 +25,7 @@ export const Messages = (): JSX.Element => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+
     if (token) {
       GetAllLastMessages(token).then((res) => {
         if (res) {
@@ -74,7 +75,7 @@ export const Messages = (): JSX.Element => {
 
     if (!token) return;
 
-    GetMessages(token, username,1).then((res) => {
+    GetMessages(token, username, 1).then((res) => {
       if (res) {
         setToogleMessage(true);
         setSelectedUser(username);
@@ -153,6 +154,7 @@ export const Messages = (): JSX.Element => {
       {foundUser && (
         <div onClick={handleFoundUser}>
           <MessageCard
+            profileImage={foundUser.profilePicture}
             message={''}
             date={''}
             userName={foundUser.userName}
@@ -175,11 +177,11 @@ export const Messages = (): JSX.Element => {
             <Typography.Title level={4}>Messages</Typography.Title>
             <div>
               <Popover content={popoverContent} title="" trigger="click">
-              <Tooltip title="Create a new message">
-                <Button shape="circle">
-                  <FileAddOutlined />
-                </Button>
-              </Tooltip>
+                <Tooltip title="Create a new message">
+                  <Button shape="circle">
+                    <FileAddOutlined />
+                  </Button>
+                </Tooltip>
               </Popover>
             </div>
           </Flex>
@@ -193,6 +195,8 @@ export const Messages = (): JSX.Element => {
                   style={{ width: '100%' }}
                 >
                   <MessageCard
+                    key={index}
+                    profileImage={message.profilePicture}
                     notificationCount={
                       notification.filter((not) => not.senderUserName === message.userName).length
                     }

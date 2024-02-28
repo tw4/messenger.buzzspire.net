@@ -1,7 +1,6 @@
 import { GetAllLastMessagesResponse } from '../Types/MessageType'
 import { Message } from '../Types/EntitysType'
-
-const API = import.meta.env.VITE_API_URL
+import {API} from './index.ts';
 
 export const GetAllLastMessages = async (token: string): Promise<GetAllLastMessagesResponse[]> => {
   const respoense = await fetch(`${API}/Message/getAllLastMessages`, {

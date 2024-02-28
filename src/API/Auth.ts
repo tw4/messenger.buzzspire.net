@@ -1,6 +1,5 @@
 import { LoginResponse, RegisterResponse } from '../Types/AuthTypes'
-
-const API = import.meta.env.VITE_API_URL
+import {API} from './index.ts';
 
 export const RegisterRequest = async (
   username: string,
@@ -24,4 +23,16 @@ export const LoginRequest = async (username: string, password: string): Promise<
     },
     body: JSON.stringify({ username, password })
   }).then((response) => response.json())
+}
+
+export const CheckAuth = async (token: string): Promise<boolean> => {
+  const response = await fetch(`${API}/auth`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      token: token
+    }
+  })
+
+  return response.status === 200
 }

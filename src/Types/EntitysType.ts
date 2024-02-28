@@ -4,6 +4,7 @@ export type User = {
   fullName: string
   bio: string
   id: number
+  profilePicture: string
 }
 
 export type Message = {
