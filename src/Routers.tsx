@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
-import { Login, Home, Register } from './Pages'
+import { Login, Home, Register, Settings } from './Pages'
 import { Messages } from './Pages/Messages'
 
 export const router = createBrowserRouter([
@@ -18,5 +18,9 @@ export const router = createBrowserRouter([
   {
     path: '/messages',
     element: <Messages />
+  },
+  {
+    path: '/settings',
+    element: <Settings />
   }
 ])

@@ -1,24 +1,40 @@
-import { FC, ReactNode } from 'react'
-import { Badge, Layout, Menu } from 'antd'
+import { FC, ReactNode, useEffect } from 'react';
+import { Badge, Layout, Menu } from 'antd';
 import {
   MessageOutlined,
   SettingFilled,
-  LogoutOutlined
-} from '@ant-design/icons'
+  LogoutOutlined,
+} from '@ant-design/icons';
+import { CheckAuth } from '../API/Auth.ts';
 
 interface MainLayoutProps {
-  children?: ReactNode
-  key?: string
+  children?: ReactNode;
+  key: string;
 }
 
-export const MainLayout: FC<MainLayoutProps> = ({ children, key = '1' }): JSX.Element => {
-  const { Sider, Content } = Layout
+export const MainLayout: FC<MainLayoutProps> = ({ children, key }): JSX.Element => {
+  const { Sider, Content } = Layout;
+
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      CheckAuth(token).then((res) => {
+        if (!res) {
+          localStorage.removeItem('token');
+          window.location.href = '/';
+        }
+      });
+    } else {
+      window.location.href = '/';
+    }
+  }, []);
 
   const logOut = (): void => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('username')
-    window.location.href = '/'
-  }
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    window.location.href = '/';
+  };
 
   return (
     <Layout>
@@ -26,7 +42,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children, key = '1' }): JSX.El
         trigger={null}
         collapsible
         collapsed={true}
-        style={{backgroundColor: '#1A1D21'}}
+        style={{ backgroundColor: '#1A1D21' }}
       >
         <Menu
           theme="light"
@@ -44,13 +60,14 @@ export const MainLayout: FC<MainLayoutProps> = ({ children, key = '1' }): JSX.El
                 </div>
               ),
               label: 'Messages',
-              onClick: () => (window.location.href = '/messages')
+              onClick: () => (window.location.href = '/messages'),
             },
             {
               key: '2',
               title: 'Setting',
               icon: <SettingFilled />,
-              label: 'Setting'
+              label: 'Setting',
+              onClick: () => (window.location.href = '/settings'),
             },
             {
               key: '3',
@@ -58,20 +75,20 @@ export const MainLayout: FC<MainLayoutProps> = ({ children, key = '1' }): JSX.El
               icon: <LogoutOutlined />,
               label: 'Logout',
               danger: true,
-              onClick: () => logOut()
-            }
+              onClick: () => logOut(),
+            },
           ]}
         />
       </Sider>
       <Layout>
         <Content
           style={{
-            minHeight: '100vh'
+            minHeight: '100vh',
           }}
         >
           {children}
         </Content>
       </Layout>
     </Layout>
-  )
-}
+  );
+};

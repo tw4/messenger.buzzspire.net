@@ -2,10 +2,10 @@ import { FC, useEffect, useState } from 'react';
 import { Avatar, Flex, Typography, Popover } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ChatItem } from './ChatItem';
-import { GetMessages } from '../API/Messages';
+import { GetMessages } from '../API/Messages.ts';
 import { Message, User } from '../Types/EntitysType';
 import { Notification } from '../Types/NotificationType';
-import { SearchUserByUserName } from '../API/User.tsx';
+import { SearchUserByUserName } from '../API/User.ts';
 
 interface ChatScreenProps {
   username: string;
@@ -18,6 +18,8 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [userDetails, setUserDetails] = useState<User>();
   const [page, setPage] = useState<number>(1);
+  const [profileImage, setProfileImage] = useState<string>('');
+  const [myProfileImage, setMyProfileImage] = useState<string>('');
 
   useEffect(() => {
     const u = localStorage.getItem('username');
@@ -28,6 +30,11 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
       getMessage();
       SearchUserByUserName(token, username).then((res) => {
           setUserDetails(res);
+          setProfileImage(`data:image/jpeg;base64, ${res.profilePicture}`);
+        },
+      );
+      SearchUserByUserName(token, u).then((res) => {
+          setMyProfileImage(`data:image/jpeg;base64, ${res.profilePicture}`);
         },
       );
     }
@@ -52,12 +59,13 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
 
   const fetchMoreData = (): void => {
     const token = localStorage.getItem('token');
-    console.log('fetchMoreData Page:', page);
     if (token) {
       GetMessages(token, username, page + 1).then((res) => {
         if (res) {
-          setVisitMessages([...visitMessages, ...res],);
+          setVisitMessages([...visitMessages, ...res]);
           setPage(page + 1);
+        } else {
+          setHasMore(false);
         }
       });
     }
@@ -90,7 +98,10 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
           borderTopRightRadius: '20px',
         }}>
           <Flex vertical={true} justify="center" align="center" gap="small" style={{ width: '100%' }}>
-            <Avatar size="large" style={{ backgroundColor: '#a4a4a4' }}>{username[0]}</Avatar>
+            {
+              profileImage.length <= 30 ? <Avatar size="large">{username[0]}</Avatar> :
+                <Avatar size="large" src={profileImage} />
+            }
             <Typography.Title level={4}>{username}</Typography.Title>
             <Typography.Text>{userDetails.fullName}</Typography.Text>
             <Typography.Text>{userDetails.bio}</Typography.Text>
@@ -106,8 +117,10 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
             gap="small">
         <Popover content={popOverContent} trigger="click">
           <Flex style={{ cursor: 'pointer' }} gap="middle">
-            <Avatar size="default">{username[0]}</Avatar>
-            <Typography.Title level={4}>{username}</Typography.Title>
+            {
+              profileImage.length <= 30 ? <Avatar size="large">{username[0]}</Avatar> :
+                <Avatar size="large" src={profileImage} />
+            } <Typography.Title level={4}>{username}</Typography.Title>
           </Flex>
         </Popover>
       </Flex>
@@ -138,6 +151,8 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
           >
             {visitMessages.map((m, index) => (
               <ChatItem
+                myProfileImage={myProfileImage}
+                profileImage={profileImage}
                 key={index}
                 message={m}
                 username={username}

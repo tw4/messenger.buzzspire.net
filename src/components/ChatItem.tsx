@@ -6,12 +6,16 @@ interface ChatItemProps {
   message: Message
   username: string
   defaultUserName: string
+  profileImage: string
+  myProfileImage: string
 }
 
 export const ChatItem: FC<ChatItemProps> = ({
   username,
   message,
-  defaultUserName
+  defaultUserName,
+  profileImage,
+  myProfileImage
 }): JSX.Element => {
   return (
     <Flex
@@ -21,7 +25,22 @@ export const ChatItem: FC<ChatItemProps> = ({
       justify={message.sender === null ? 'end' : 'start'}
     >
       <Flex vertical={true}>
-        <Avatar>{message.receiver === null ? username[0] : defaultUserName[0]}</Avatar>
+        {
+          message.sender !== null ? (
+            <Avatar
+              size={40}
+              src={profileImage}
+            >
+              {username}
+            </Avatar>
+          ) :
+          <Avatar
+            size={40}
+            src={myProfileImage}
+          >
+            {defaultUserName[0]}
+          </Avatar>
+        }
       </Flex>
       <Flex
         vertical={true}
