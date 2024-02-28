@@ -216,6 +216,7 @@ export const Messages = (): JSX.Element => {
               <ChatScreen username={selectedUser} notification={notification} />
               <Flex style={{ padding: '10px' }} gap="small" align="center">
                 <Input
+                  autoFocus={true}
                   allowClear
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Type a message"
