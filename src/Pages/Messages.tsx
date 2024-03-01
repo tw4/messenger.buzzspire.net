@@ -95,7 +95,6 @@ export const Messages = (): JSX.Element => {
     const filter = lastMessagesResponse.filter((message) => {
       return message.userName.toLowerCase().includes(value.toLowerCase());
     });
-
     setLastMessageFilter(filter);
   };
 
@@ -127,14 +126,18 @@ export const Messages = (): JSX.Element => {
       };
 
       webSocket.send(JSON.stringify(request));
+
+
     }
   };
 
   const handleSearchUser = (value: string): void => {
-    const token = localStorage.getItem('token');
-    if (token) {
+    const token = localStorage.getItem('token')
+    const username = localStorage.getItem('username')
+    ;
+    if (token && username) {
       SearchUserByUserName(token, value).then((res) => {
-        if (typeof res.userName === 'string') {
+        if (typeof res.userName === 'string' && res.userName !== username) {
           setFoundUser(res);
         }
       });
@@ -187,6 +190,9 @@ export const Messages = (): JSX.Element => {
           <Search placeholder="Search" onSearch={(e) => handlerSearch(e)} />
           <Flex vertical={true} align="center" style={{ marginTop: '10px' }}>
             {lastmessageFilter.map((message, index) => {
+              const username = localStorage.getItem('username')
+              if (message.userName === username) return null;
+
               return (
                 <div
                   key={index}
