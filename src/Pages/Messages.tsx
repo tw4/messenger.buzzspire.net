@@ -111,7 +111,6 @@ export const Messages = (): JSX.Element => {
         });
       } else {
         setText('');
-        handleToogleMessage(selectedUser);
         GetAllLastMessages(token).then((res) => {
           if (res) {
             setLastMessagesResponse(res);
@@ -218,6 +217,7 @@ export const Messages = (): JSX.Element => {
                 <Input
                   autoFocus={true}
                   allowClear
+                  value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Type a message"
                   onKeyPress={(e) => {
