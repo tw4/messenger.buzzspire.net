@@ -13,28 +13,23 @@ interface ChatScreenProps {
 }
 
 export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX.Element => {
-  const [defaultUserName, setDefaultUserName] = useState<string>('');
+  const [currentUserName, setCurrentUserName] = useState<string>('');
   const [visitMessages, setVisitMessages] = useState<Message[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [userDetails, setUserDetails] = useState<User>();
   const [page, setPage] = useState<number>(1);
   const [profileImage, setProfileImage] = useState<string>('');
-  const [myProfileImage, setMyProfileImage] = useState<string>('');
 
   useEffect(() => {
     const u = localStorage.getItem('username');
     const token = localStorage.getItem('token');
 
     if (u && token) {
-      setDefaultUserName(u);
+      setCurrentUserName(u);
       getMessage();
       SearchUserByUserName(token, username).then((res) => {
           setUserDetails(res);
           setProfileImage(`data:image/jpeg;base64, ${res.profilePicture}`);
-        },
-      );
-      SearchUserByUserName(token, u).then((res) => {
-          setMyProfileImage(`data:image/jpeg;base64, ${res.profilePicture}`);
         },
       );
     }
@@ -151,12 +146,13 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
           >
             {visitMessages.map((m, index) => (
               <ChatItem
-                myProfileImage={myProfileImage}
-                profileImage={profileImage}
+                currentUserName={currentUserName}
+                fullName={m.fullName}
+                profilePicture={m.profilePicture}
+                userName={m.userName}
+                content={m.content}
+                date={m.date}
                 key={index}
-                message={m}
-                username={username}
-                defaultUserName={defaultUserName}
               />
             ))}
           </InfiniteScroll>
