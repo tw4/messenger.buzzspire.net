@@ -8,11 +8,11 @@ export type User = {
 }
 
 export type Message = {
-  senderId: number
-  sender: User
-  receiverId: number
-  receiver: User
-  date: string
   content: string
-  id: number
+  date : string
+  fullName : string
+  profilePicture: string
+  receiverId: number
+  senderId : number
+  userName : string
 }
