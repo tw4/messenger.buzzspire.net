@@ -1,46 +1,50 @@
-import { Avatar, Flex, Typography } from 'antd'
-import { FC } from 'react'
-import { Message } from '../Types/EntitysType'
+import { Avatar, Flex, Tooltip, Typography } from 'antd';
+import { FC } from 'react';
 
 interface ChatItemProps {
-  message: Message
-  username: string
-  defaultUserName: string
-  profileImage: string
-  myProfileImage: string
+  content: string;
+  date: string;
+  fullName: string;
+  profilePicture: string;
+  userName: string;
+  currentUserName: string;
 }
 
 export const ChatItem: FC<ChatItemProps> = ({
-  username,
-  message,
-  defaultUserName,
-  profileImage,
-  myProfileImage
-}): JSX.Element => {
+                                              fullName,
+                                              profilePicture,
+                                              userName,
+                                              content,
+                                              date,
+                                              currentUserName,
+                                            }): JSX.Element => {
   return (
     <Flex
       style={{ padding: '10px' }}
       gap="small"
       align="end"
-      justify={message.sender === null ? 'end' : 'start'}
+      justify={userName === currentUserName ? 'end' : 'start'}
     >
       <Flex vertical={true}>
-        {
-          message.sender !== null ? (
-            <Avatar
-              size={40}
-              src={profileImage}
-            >
-              {username}
-            </Avatar>
-          ) :
-          <Avatar
-            size={40}
-            src={myProfileImage}
-          >
-            {defaultUserName[0]}
-          </Avatar>
-        }
+        <Tooltip title={fullName}>
+          {
+            profilePicture !== '' ? (
+                <Avatar
+                  size={40}
+                  src={`data:image/jpeg;base64, ${profilePicture}`}
+                >
+                  {userName}
+                </Avatar>
+              ) :
+              <Avatar
+                size={40}
+                src={userName}
+              >
+                {userName[0]}
+              </Avatar>
+          }
+        </Tooltip>
+
       </Flex>
       <Flex
         vertical={true}
@@ -49,14 +53,14 @@ export const ChatItem: FC<ChatItemProps> = ({
           borderRadius: '20px 20px 20px 0px',
           padding: '10px',
           maxWidth: '50%',
-          backgroundColor: message.receiver === null ? '#434242' : '#00CC71'
+          backgroundColor: userName === currentUserName ? '#00cc71' : '#434242',
         }}
       >
-        <Typography.Text>{message.content}</Typography.Text>
+        <Typography.Text>{content}</Typography.Text>
         <Typography.Text style={{ textAlign: 'end' }} type="secondary">
-          {new Date(message.date).toLocaleTimeString().slice(0, 5)}
+          {new Date(date).toLocaleTimeString().slice(0, 5)}
         </Typography.Text>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
