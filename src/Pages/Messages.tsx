@@ -137,7 +137,7 @@ export const Messages = (): JSX.Element => {
     ;
     if (token && username) {
       SearchUserByUserName(token, value).then((res) => {
-        if (typeof res.userName === 'string' && res.userName !== username) {
+        if (res.userName !== username) {
           setFoundUser(res);
         }
       });
