@@ -168,7 +168,7 @@ export const Messages = (): JSX.Element => {
   );
 
   return (
-    <MainLayout key="1">
+    <MainLayout>
       {contextHolder}
       <Flex>
         <Flex
