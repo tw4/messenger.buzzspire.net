@@ -5,7 +5,7 @@ import { ChatItem } from './ChatItem';
 import { GetMessages } from '../API/Messages.ts';
 import { Message, User } from '../Types/EntitysType';
 import { Notification } from '../Types/NotificationType';
-import { SearchUserByUserName } from '../API/User.ts';
+import { SearchUserByUserName, UserIsOnline } from '../API/User.ts';
 
 interface ChatScreenProps {
   username: string;
@@ -19,6 +19,7 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
   const [userDetails, setUserDetails] = useState<User>();
   const [page, setPage] = useState<number>(1);
   const [profileImage, setProfileImage] = useState<string>('');
+  const [userIsOnline, setUserIsOnline] = useState<boolean>(false);
 
   useEffect(() => {
     const u = localStorage.getItem('username');
@@ -32,13 +33,22 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
           setProfileImage(`data:image/jpeg;base64, ${res.profilePicture}`);
         },
       );
+      UserIsOnline(token, username).then((res) => {
+          setUserIsOnline(res.isOnline);
+        },
+      );
     }
 
     const chatScreen = document.querySelector('.chatScreen');
     if (chatScreen) {
       chatScreen.scrollTop = chatScreen.scrollHeight;
     }
-  }, [username]);
+
+    if (notification.find((n) => n.senderUserName === username)) {
+      getMessage();
+      setPage(1);
+    }
+  }, [username, notification]);
 
   const getMessage = (): void => {
     const token = localStorage.getItem('token');
@@ -65,13 +75,6 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
       });
     }
   };
-
-  useEffect(() => {
-    if (notification.find((n) => n.senderUserName === username)) {
-      getMessage();
-      setPage(1);
-    }
-  }, [notification]);
 
   const popOverContent = (
     userDetails && (
@@ -115,7 +118,10 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
             {
               profileImage.length <= 30 ? <Avatar size="large">{username[0]}</Avatar> :
                 <Avatar size="large" src={profileImage} />
-            } <Typography.Title level={4}>{username}</Typography.Title>
+            } <Typography.Title level={4} style={{ display: 'flex', alignItems: 'center' }}>{username}
+            {userIsOnline && <div
+              style={{ backgroundColor: 'green', width: 10, height: 10, borderRadius: 5, marginLeft: '10px' }}></div>}
+          </Typography.Title>
           </Flex>
         </Popover>
       </Flex>

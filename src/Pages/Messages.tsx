@@ -126,8 +126,6 @@ export const Messages = (): JSX.Element => {
       };
 
       webSocket.send(JSON.stringify(request));
-
-
     }
   };
 

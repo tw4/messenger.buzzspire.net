@@ -1,16 +1,17 @@
-import { User } from '../Types/EntitysType'
-import {API} from './index.ts';
+import { User } from '../Types/EntitysType';
+import { API } from './index.ts';
+import { UserIsOnlineResponse } from '../Types/UserTypes.ts';
 
 export const SearchUserByUserName = async (token: string, username: string): Promise<User> => {
   const respoense = await fetch(`${API}/User/search/${username}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      token: token
-    }
-  })
-  return respoense.json()
-}
+      token: token,
+    },
+  });
+  return respoense.json();
+};
 
 // export const UploadProfilePicture = async (token: string, file: File): Promise<string> => {
 //   const formData = new FormData()
@@ -25,33 +26,44 @@ export const SearchUserByUserName = async (token: string, username: string): Pro
 //   return respoense.json()
 // }
 
-export const UpdateUserBasicInfo = async (token: string, fullName:string, bio:string): Promise<boolean> => {
+export const UpdateUserBasicInfo = async (token: string, fullName: string, bio: string): Promise<boolean> => {
   const respoense = await fetch(`${API}/User/updateBasicInfo`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      token: token
+      token: token,
     },
     body: JSON.stringify({
       fullName: fullName,
-      bio: bio
-    })
-  })
-  return respoense.status === 200
-}
+      bio: bio,
+    }),
+  });
+  return respoense.status === 200;
+};
 
-export const UpdateUserPassword = async (token: string, oldPassword:string, newPassword:string,confirmPassword:string ): Promise<boolean> => {
+export const UpdateUserPassword = async (token: string, oldPassword: string, newPassword: string, confirmPassword: string): Promise<boolean> => {
   const respoense = await fetch(`${API}/User/updatePassword`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      token: token
+      token: token,
     },
     body: JSON.stringify({
       oldPassword: oldPassword,
       newPassword: newPassword,
-      confirmPassword: confirmPassword
-    })
-  })
-  return respoense.status === 200
-}
+      confirmPassword: confirmPassword,
+    }),
+  });
+  return respoense.status === 200;
+};
+
+export const UserIsOnline = async (token: string, username: string): Promise<UserIsOnlineResponse> => {
+  const respoense = await fetch(`${API}/User/isOnline/${username}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      token: token,
+    },
+  });
+  return respoense.json();
+};
