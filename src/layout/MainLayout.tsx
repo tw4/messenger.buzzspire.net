@@ -9,12 +9,11 @@ import { CheckAuth } from '../API/Auth.ts';
 
 interface MainLayoutProps {
   children?: ReactNode;
-  key: string;
 }
 
-export const MainLayout: FC<MainLayoutProps> = ({ children, key }): JSX.Element => {
+export const MainLayout: FC<MainLayoutProps> = ({ children,}): JSX.Element => {
   const { Sider, Content } = Layout;
-
+  const key = window.location.pathname === '/messages' ? '1' : window.location.pathname === '/settings' ? '2' : '0';
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -47,7 +46,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children, key }): JSX.Element 
         <Menu
           theme="light"
           mode="inline"
-          defaultSelectedKeys={[key]}
+          selectedKeys={[key]}
           items={[
             {
               key: '1',

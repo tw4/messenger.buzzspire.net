@@ -112,7 +112,7 @@ export const Settings = () => {
   };
 
   return (
-    <MainLayout key="2">
+    <MainLayout>
       {contextHolder}
       <Flex justify="center" align="center" vertical={true} gap='middle'>
         <Typography.Title level={2}>Settings</Typography.Title>
