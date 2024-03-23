@@ -31,12 +31,13 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
       SearchUserByUserName(token, username).then((res) => {
           setUserDetails(res);
           setProfileImage(`data:image/jpeg;base64, ${res.profilePicture}`);
+          UserIsOnline(token, res.id).then((ress) => {
+              setUserIsOnline(ress.isOnline);
+            },
+          );
         },
       );
-      UserIsOnline(token, username).then((res) => {
-          setUserIsOnline(res.isOnline);
-        },
-      );
+
     }
 
     const chatScreen = document.querySelector('.chatScreen');

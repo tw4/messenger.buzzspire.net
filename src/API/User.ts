@@ -57,8 +57,8 @@ export const UpdateUserPassword = async (token: string, oldPassword: string, new
   return respoense.status === 200;
 };
 
-export const UserIsOnline = async (token: string, username: string): Promise<UserIsOnlineResponse> => {
-  const respoense = await fetch(`${API}/User/isOnline/${username}`, {
+export const UserIsOnline = async (token: string, userId: number): Promise<UserIsOnlineResponse> => {
+  const respoense = await fetch(`${API}/User/isOnline/${userId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
