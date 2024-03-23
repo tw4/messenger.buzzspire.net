@@ -3,7 +3,7 @@ import { Flex, Button, Tooltip, Typography, message, Input, Popover } from 'antd
 import { MessageCard } from '../components/MessageCard';
 import { GetAllLastMessagesResponse } from '../Types/MessageType';
 import { useEffect, useState } from 'react';
-import { GetAllLastMessages, GetMessages, SendMessage } from '../API/Messages.ts';
+import { GetAllLastMessages, SendMessage } from '../API/Messages.ts';
 import { FileAddOutlined, SendOutlined } from '@ant-design/icons';
 import { ChatScreen } from '../components/ChatScreen';
 import { Notification } from '../Types/NotificationType';
@@ -75,14 +75,9 @@ export const Messages = (): JSX.Element => {
 
     if (!token) return;
 
-    GetMessages(token, username, 1).then((res) => {
-      if (res) {
-        setToogleMessage(true);
-        setSelectedUser(username);
-      }
-    });
+    setToogleMessage(true);
+    setSelectedUser(username);
 
-    setToogleMessage(false);
     setNotification((prev) => prev.filter((not) => not.senderUserName !== username));
   };
 
@@ -130,7 +125,7 @@ export const Messages = (): JSX.Element => {
   };
 
   const handleSearchUser = (value: string): void => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     const username = localStorage.getItem('username')
     ;
     if (token && username) {
@@ -190,7 +185,7 @@ export const Messages = (): JSX.Element => {
           <Search placeholder="Search" onSearch={(e) => handlerSearch(e)} />
           <Flex vertical={true} align="center" style={{ marginTop: '10px' }}>
             {lastmessageFilter.map((message, index) => {
-              const username = localStorage.getItem('username')
+              const username = localStorage.getItem('username');
               if (message.userName === username) return null;
 
               return (

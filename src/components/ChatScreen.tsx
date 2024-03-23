@@ -44,10 +44,6 @@ export const ChatScreen: FC<ChatScreenProps> = ({ username, notification }): JSX
       chatScreen.scrollTop = chatScreen.scrollHeight;
     }
 
-    if (notification.find((n) => n.senderUserName === username)) {
-      getMessage();
-      setPage(1);
-    }
   }, [username, notification]);
 
   const getMessage = (): void => {
